@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Launching SMART App</title>
+  <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.min.js"></script>
+</head>
+<body>
+  <h1>Launching SMART App...</h1>
+  <div id="status">Preparing to launch...</div>
+  <div id="debug"></div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const iss = params.get("iss");
+    const launch = params.get("launch");
+    
+    // Debug info
+    document.getElementById("debug").innerHTML = `
+      <h3>Debug Info:</h3>
+      <p>ISS: ${iss}</p>
+      <p>Launch: ${launch}</p>
+    `;
+    
+    if (!iss || !launch) {
+      document.getElementById("status").innerText = "Missing 'iss' or 'launch' parameter. Please launch from OpenEMR.";
+    } else {
+      document.getElementById("status").innerText = "Redirecting to authorize...";
+      
+      FHIR.oauth2.authorize({
+        clientId: "m5y0N231MX8zZBlJcUYSkwyEgKg_Xapk5p7yDzCCkv4",
+        scope: "openid fhirUser online_access offline_access launch launch/patient api:oemr api:fhir api:port",
+        redirectUri: "https://drlalithapranathi.github.io/smart_on_fhir_demo/index.html",
+        iss: iss,
+        launch: launch
+      });
+    }
+  </script>
+</body>
+</html>
